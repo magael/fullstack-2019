@@ -1,37 +1,57 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-const Footer = () => {
+const Total = (props) => {
   return (
     <div>
-      greeting app created by
-      <a href="https://github.com/mluukkai">mluukkai</a>
+      <p>yhteensä {props.exercises1 + props.exercises2 + props.exercises3} tehtävää</p>
     </div>
-  );
-};
+  )
+}
 
-const Hello = props => {
+const Part = (props) => {
   return (
     <div>
-      <p>
-        Hello {props.name}, you are {props.age} years old
-      </p>
+      <p>{props.part} {props.exercises}</p>
     </div>
-  );
-};
+  )
+}
+
+const Content = (props) => {
+  return (
+    <div>
+      <Part part={props.part1} exercises={props.exercises1}/>
+      <Part part={props.part2} exercises={props.exercises2}/>
+      <Part part={props.part3} exercises={props.exercises3}/>
+    </div>
+  )
+}
+
+const Header = (props) => {
+  return (
+    <div>
+      <h1>{props.course}</h1>
+    </div>
+  )
+}
 
 const App = () => {
-  const nimi = "Pekka";
-  const ika = 10;
+  const course = 'Half Stack -sovelluskehitys'
+  const part1 = 'Reactin perusteet'
+  const exercises1 = 10
+  const part2 = 'Tiedonvälitys propseilla'
+  const exercises2 = 7
+  const part3 = 'Komponenttien tila'
+  const exercises3 = 14
 
   return (
-    <>
-      <h1>Greetings</h1>
-      <Hello name="Arto" age={26 + 10} />
-      <Hello name={nimi} age={ika} />
-      <Footer />
-    </>
-  );
-};
+    <div>
+      <Header course={course} />
+      <Content part1={part1} part2={part2} part3={part3}
+      exercises1={exercises1} exercises2={exercises2} exercises3={exercises3}/>
+      <Total exercises1={exercises1} exercises2={exercises2} exercises3={exercises3}/>
+    </div>
+  )
+}
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById('root'))
