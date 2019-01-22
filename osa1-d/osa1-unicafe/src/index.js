@@ -5,13 +5,18 @@ const Statistics = props => {
   const { good, neutral, bad } = props;
   let total = good + neutral + bad;
   let avg, positive = 0;
-  if (total !== 0) {
+
+  if (total === 0) {
+    return <Display title="Ei yhtään palautetta annettu" />;
+  } else {
     avg = (good - bad) / total;
     positive = (good / total) * 100;
   }
-
   return (
     <div>
+      <Display title="hyvä" value={good} />
+      <Display title="neutraali" value={neutral} />
+      <Display title="huono" value={bad} />
       <Display title="yhteensä" value={total} />
       <Display title="keskiarvo" value={avg} />
       positiivisia {positive} %
@@ -49,10 +54,6 @@ const App = props => {
       <Button handleClick={() => setToBad(bad + 1)} text="huono" />
 
       <Header title="statistiikka" />
-
-      <Display title="hyvä" value={good} />
-      <Display title="neutraali" value={neutral} />
-      <Display title="huono" value={bad} />
 
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
