@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-const App = props => {
-  const { anecdotes, length } = props;
+const Button = props => (
+  <button onClick={props.handleClick}>{props.text}</button>
+);
 
+const Display = props => <div>{props.value}</div>;
+
+const App = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0);
 
   const setToSelect = newValue => {
@@ -13,15 +17,24 @@ const App = props => {
   const newRandom = range => {
     let random = selected;
     while (random === selected) random = Math.floor(Math.random() * range);
-    console.log(random)
     return random;
+  };
+
+  const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0]);
+
+  const setToVotes = () => {
+    const copy = [...votes];
+    copy[selected] += 1;
+    setVotes(copy);
   };
 
   return (
     <div>
-      {anecdotes[selected]}
+      <Display value={anecdotes[selected]} />
+      <Display value={"has ".concat(votes[selected]).concat(" votes")} />
+      <Button handleClick={setToVotes} text="vote" />
       <Button
-        handleClick={() => setToSelect(newRandom(length))}
+        handleClick={() => setToSelect(newRandom(anecdotes.length))}
         text="next anectdote"
       />
     </div>
@@ -37,11 +50,4 @@ const anecdotes = [
   "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it."
 ];
 
-const Button = props => (
-  <button onClick={props.handleClick}>{props.text}</button>
-);
-
-ReactDOM.render(
-  <App anecdotes={anecdotes} length={anecdotes.length} />,
-  document.getElementById("root")
-);
+ReactDOM.render(<App anecdotes={anecdotes} />, document.getElementById("root"));
