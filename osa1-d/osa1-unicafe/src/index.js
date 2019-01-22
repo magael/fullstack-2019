@@ -1,32 +1,44 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-const Display = props => <div>{props.title} {props.value}</div>;
+const Statistics = props => {
+  const { good, neutral, bad } = props;
+  let total = good + neutral + bad;
+  let avg, positive = 0;
+  if (total !== 0) {
+    avg = (good - bad) / total;
+    positive = (good / total) * 100;
+  }
+
+  return (
+    <div>
+      <Display title="yhteensä" value={total} />
+      <Display title="keskiarvo" value={avg} />
+      positiivisia {positive} %
+    </div>
+  );
+};
+
+const Display = props => (
+  <div>
+    {props.title} {props.value}
+  </div>
+);
 
 const Button = props => (
   <button onClick={props.handleClick}>{props.text}</button>
 );
 
-const Header = props => {
-  return <h1>{props.title}</h1>;
-};
+const Header = props => <h1>{props.title}</h1>;
 
 const App = props => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const setToGood = newValue => {
-    setGood(newValue);
-  };
-  
-  const setToNeutral = newValue => {
-    setNeutral(newValue);
-  };
-
-  const setToBad = newValue => {
-    setBad(newValue);
-  };
+  const setToGood = newValue => setGood(newValue);
+  const setToNeutral = newValue => setNeutral(newValue);
+  const setToBad = newValue => setBad(newValue);
 
   return (
     <div>
@@ -38,9 +50,11 @@ const App = props => {
 
       <Header title="statistiikka" />
 
-      <Display title='hyvä' value={good} />
-      <Display title='neutraali' value={neutral} />
-      <Display title='huono' value={bad} />
+      <Display title="hyvä" value={good} />
+      <Display title="neutraali" value={neutral} />
+      <Display title="huono" value={bad} />
+
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
 };
