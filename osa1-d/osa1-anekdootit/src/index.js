@@ -9,6 +9,8 @@ const Display = props => <div>{props.value}</div>;
 
 const App = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0]);
+  const [mostVoted, setMostVoted] = useState(0);
 
   const setToSelect = newValue => {
     setSelected(newValue);
@@ -20,16 +22,31 @@ const App = ({ anecdotes }) => {
     return random;
   };
 
-  const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0]);
-
   const setToVotes = () => {
     const copy = [...votes];
     copy[selected] += 1;
     setVotes(copy);
+    setToMostVoted(copy);
+  };
+
+  const setToMostVoted = copy => {
+    let max = copy[mostVoted];
+    let maxIndex = 0;
+    
+    let i = 0;
+    copy.forEach(votesOfElement => {
+      if (votesOfElement > max) {
+        maxIndex = i;
+        max = copy[i]
+        setMostVoted(maxIndex);
+      }
+      i += 1;
+    });
   };
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <Display value={anecdotes[selected]} />
       <Display value={"has ".concat(votes[selected]).concat(" votes")} />
       <Button handleClick={setToVotes} text="vote" />
@@ -37,6 +54,10 @@ const App = ({ anecdotes }) => {
         handleClick={() => setToSelect(newRandom(anecdotes.length))}
         text="next anectdote"
       />
+
+      <h1>Anecdote with most votes</h1>
+      <Display value={anecdotes[mostVoted]} />
+      <Display value={"has ".concat(votes[mostVoted]).concat(" votes")} />
     </div>
   );
 };
