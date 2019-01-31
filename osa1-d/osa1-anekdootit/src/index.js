@@ -9,7 +9,19 @@ const Display = props => <div>{props.value}</div>;
 
 const App = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0);
-  const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0]);
+  const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0]); // hups kovakoodaus.
+// How about trying like this:
+
+// Array.apply(null, new Array(10)).map(Number.prototype.valueOf,0);
+// //Output as [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+// or
+
+// new Array(10+1).join('0').split('').map(parseFloat)
+// //Output as [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+// EDIT:-
+
+// If your array is dynamic then simply put that in a function which takes a number and replace 10 by that variable.
+  
   const [mostVoted, setMostVoted] = useState(0);
 
   const setToSelect = newValue => {
