@@ -3,9 +3,10 @@ import React from "react";
 const Header = props => <h1>{props.course}</h1>;
 
 const Total = props => {
-  let total = 0;
-  props.parts.forEach(element => {
-    total += element.exercises;
+  const parts = props.parts;
+  const total = parts.reduce((s, p) => {
+    if (s.exercises) return s.exercises + p.exercises;
+    return s + p.exercises;
   });
 
   return <p>yhteensä {total} tehtävää</p>;
@@ -17,20 +18,11 @@ const Part = props => (
   </p>
 );
 
-const Content = ({parts}) => {
-  const rows = () => parts.map(part =>
-    <Part 
-      key={part.id}
-      part={part}
-    />
-  )
+const Content = ({ parts }) => {
+  const rows = () => parts.map(part => <Part key={part.id} part={part} />);
 
-  return (
-    <div>
-      {rows()}
-    </div>
-  )
-}
+  return <div>{rows()}</div>;
+};
 
 const Course = ({ course }) => {
   return (
@@ -42,4 +34,4 @@ const Course = ({ course }) => {
   );
 };
 
-export default Course
+export default Course;
