@@ -1,11 +1,51 @@
 import React, { useState } from "react";
-// import Name from ".components/Name";
 
-const Persons = ({ person }) => {
+const Persons = props => {
+  const { persons, filter } = props;
+  const filteredPersons = persons.filter(person =>
+    person.name.toLowerCase().includes(filter.toLowerCase())
+  );
+  console.log(filteredPersons);
+  return (
+    <div>
+      {filteredPersons.map(person => (
+        <Person key={person.name} person={person} />
+      ))}
+    </div>
+  );
+};
+
+const Person = ({ person }) => {
   return (
     <p>
       {person.name} {person.number}
     </p>
+  );
+};
+
+const Filter = props => {
+  return (
+    <form>
+      <div>
+        rajaa näytettäviä <input value={props.filter} onChange={props.handleFilterChange} />
+      </div>
+    </form>
+  );
+};
+
+const PersonForm = props => {
+  return (
+    <form onSubmit={props.addPerson}>
+      <div>
+        nimi: <input value={props.newName} onChange={props.handleNameChange} />
+      </div>
+      <div>
+        numero : <input value={props.newNumber} onChange={props.handleNumberChange} />
+      </div>
+      <div>
+        <button type="submit">lisää</button>
+      </div>
+    </form>
   );
 };
 
@@ -51,39 +91,22 @@ const App = () => {
     console.log("nappia painettu", event.target);
   };
 
-  const rows = () => {
-    const filteredPersons = persons.filter(person =>
-      person.name.toLowerCase().includes(newFilter.toLowerCase())
-    );
-    console.log(filteredPersons);
-    return filteredPersons.map(person => <Persons key={person.name} person={person} />);
-  };
-
   return (
     <div>
       <h1>Puhelinluettelo</h1>
-      <form>
-        <div>
-          rajaa näytettäviä{" "}
-          <input value={newFilter} onChange={handleFilterChange} />
-        </div>
-      </form>
+      <Filter filter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h2>lisää uusi</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          nimi: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          numero : <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">lisää</button>
-        </div>
-      </form>
+      <PersonForm
+        addPerson={addPerson}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
 
       <h2>Numerot</h2>
-      <div>{rows()}</div>
+      <Persons persons={persons} filter={newFilter} />
     </div>
   );
 };
