@@ -24,6 +24,15 @@ const App = () => {
   const addName = event => {
     event.preventDefault();
 
+    const names = persons.map(person => person.name);
+
+    if (names.includes(newName)) {
+      console.log("on jo")
+      return (window.alert(`${newName} on jo luettelossa`));
+    }
+    console.log(persons)
+    console.log("ei ollu??")
+
     const nameObject = {
       name: newName,
       number: "0",
