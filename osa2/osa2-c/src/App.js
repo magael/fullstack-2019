@@ -7,7 +7,7 @@ const promise = axios.get(countriesUrl);
 console.log(promise);
 
 const Countries = props => {
-  const { countries, filter } = props;
+  const { countries, filter, setNewFilter } = props;
   const filteredCountries = countries.filter(country =>
     country.name.toLowerCase().includes(filter.toLowerCase())
   );
@@ -31,14 +31,28 @@ const Countries = props => {
   return (
     <div>
       {filteredCountries.map(country => (
-        <Country key={country.name} country={country} />
+        <Country
+          key={country.name}
+          country={country}
+          setNewFilter={setNewFilter}
+        />
       ))}
     </div>
   );
 };
 
-const Country = ({ country }) => {
-  return <p>{country.name}</p>;
+const Country = props => {
+  const handleFilterChange = event => {
+    event.preventDefault();
+    props.setNewFilter(props.country.name);
+  };
+
+  return (
+    <div>
+      {props.country.name}
+      <button onClick={handleFilterChange}>show</button>
+    </div>
+  );
 };
 
 const Language = ({ language }) => {
@@ -64,7 +78,7 @@ const CountryDetails = ({ country }) => {
       <h2>languages</h2>
       <ul>{languages()}</ul>
 
-      <img src={country.flag} alt="flag" width="10%" height="10%"/>
+      <img src={country.flag} alt="flag" width="10%" height="10%" />
     </div>
   );
 };
@@ -100,8 +114,11 @@ const App = () => {
   return (
     <div>
       <Filter filter={newFilter} handleFilterChange={handleFilterChange} />
-
-      <Countries countries={countries} filter={newFilter} />
+      <Countries
+        countries={countries}
+        filter={newFilter}
+        setNewFilter={setNewFilter}
+      />
     </div>
   );
 };
