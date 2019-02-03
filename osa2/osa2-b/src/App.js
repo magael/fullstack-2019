@@ -96,8 +96,14 @@ const App = () => {
       number: newNumber
     };
 
-    setPersons(persons.concat(nameObject));
-    console.log("nappia painettu", event.target);
+    axios
+      .post('http://localhost:3001/persons', nameObject)
+      .then(response => {
+        setPersons(persons.concat(response.data));
+        setNewName('');
+        setNewNumber('');
+        console.log("nappia painettu", event.target);
+      })
   };
 
   return (

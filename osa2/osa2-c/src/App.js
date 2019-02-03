@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const countriesUrl = "https://restcountries.eu/rest/v2/all";
+var weather = require("./weatherlib");
 
+const countriesUrl = "https://restcountries.eu/rest/v2/all";
 const promise = axios.get(countriesUrl);
 console.log(promise);
 
@@ -59,6 +60,23 @@ const Language = ({ language }) => {
   return <li>{language.name}</li>;
 };
 
+const Weather = ({ city }) => {
+  const errorHandler = () => {
+    console.log("got some error");
+  };
+
+  const cityString = city.toLowerCase();
+  const cityWeather = weather.currentWeather(cityString, errorHandler);
+  console.log(cityWeather);
+
+  return (
+    <div>
+      <h2>Weather in {city}</h2>
+      <p>temperature: </p>
+    </div>
+  );
+};
+
 const CountryDetails = ({ country }) => {
   const languages = () =>
     country.languages.map(language => (
@@ -79,6 +97,8 @@ const CountryDetails = ({ country }) => {
       <ul>{languages()}</ul>
 
       <img src={country.flag} alt="flag" width="10%" height="10%" />
+
+      {/* <Weather city={country.capital} /> */}
     </div>
   );
 };
