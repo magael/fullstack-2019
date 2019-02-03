@@ -1,29 +1,46 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import personService from "./services/persons";
 
-const promise = axios.get("http://localhost:3001/persons");
-console.log(promise);
+const RemoveButton = props => {
+  const { person, persons, setPersons } = props;
+  const newPersons = persons.filter(p => p.name !== person.name);
+
+  const popup = () => {
+    if (window.confirm(`Poistetaanko ${person.name}`)) {
+      personService.remove(person.id);
+      setPersons(newPersons);
+    }
+  };
+
+  return <button onClick={popup}>poista</button>;
+};
 
 const Persons = props => {
-  const { persons, filter } = props;
+  const { persons, filter, setPersons } = props;
   const filteredPersons = persons.filter(person =>
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
-  console.log(filteredPersons);
+
   return (
     <div>
       {filteredPersons.map(person => (
-        <Person key={person.name} person={person} />
+        <Person
+          key={person.name}
+          person={person}
+          persons={persons}
+          setPersons={setPersons}
+        />
       ))}
     </div>
   );
 };
 
-const Person = ({ person }) => {
+const Person = props => {
+  const { person, persons, setPersons } = props;
   return (
     <p>
       {person.name} {person.number}
+      <RemoveButton person={person} persons={persons} setPersons={setPersons} />
     </p>
   );
 };
@@ -63,28 +80,20 @@ const App = () => {
   const [newFilter, setNewFilter] = useState("");
 
   useEffect(() => {
-    personService
-      .getAll()
-      // .then(response => {
-      //   console.log('promise fulfilled')
-      //   setPersons(response.data)
-      .then(initialPersons => {
-        setPersons(initialPersons);
-      });
+    personService.getAll().then(initialPersons => {
+      setPersons(initialPersons);
+    });
   }, []);
 
   const handleNameChange = event => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const handleNumberChange = event => {
-    console.log(event.target.value);
     setNewNumber(event.target.value);
   };
 
   const handleFilterChange = event => {
-    console.log(event.target.value);
     setNewFilter(event.target.value);
   };
 
@@ -100,15 +109,11 @@ const App = () => {
       number: newNumber
     };
 
-    personService
-      .create(nameObject)
-      // .then(response => {
-      // setPersons(persons.concat(response.data));
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName("");
-        setNewNumber("");
-      });
+    personService.create(nameObject).then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   return (
@@ -126,7 +131,7 @@ const App = () => {
       />
 
       <h2>Numerot</h2>
-      <Persons persons={persons} filter={newFilter} />
+      <Persons persons={persons} filter={newFilter} setPersons={setPersons} />
     </div>
   );
 };
