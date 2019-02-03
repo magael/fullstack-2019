@@ -97,23 +97,40 @@ const App = () => {
     setNewFilter(event.target.value);
   };
 
+  const updatePerson = nameObject => {
+    if (
+      window.confirm(
+        `${
+          nameObject.name
+        } on jo luettelossa, korvataanko vanha numero uudella?`
+      )
+    ) {
+      const person = persons.find(p => p.name === nameObject.name);
+      personService.update(person.id, nameObject).then(returnedPerson => {
+        setPersons(persons.map(p => (p.id !== person.id ? p : returnedPerson)));
+      });
+    }
+  };
+
   const addPerson = event => {
     event.preventDefault();
 
     const names = persons.map(person => person.name);
-    if (names.includes(newName))
-      return window.alert(`${newName} on jo luettelossa`);
-
     const nameObject = {
       name: newName,
       number: newNumber
     };
 
-    personService.create(nameObject).then(returnedPerson => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-    });
+    if (names.includes(newName)) {
+      updatePerson(nameObject);
+    } else {
+      personService.create(nameObject).then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
+      });
+    }
+
+    setNewName("");
+    setNewNumber("");
   };
 
   return (
