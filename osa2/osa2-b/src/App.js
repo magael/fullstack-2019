@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import personService from "./services/persons";
 
 const RemoveButton = props => {
-  const { person, persons, setPersons } = props;
+  const { person, persons, setPersons, setNotificationMessage } = props;
   const newPersons = persons.filter(p => p.name !== person.name);
 
   const popup = () => {
     if (window.confirm(`Poistetaanko ${person.name}`)) {
       personService.remove(person.id);
       setPersons(newPersons);
+      setNotificationMessage(`${person.name} poistettu`);
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
     }
   };
 
@@ -16,7 +20,7 @@ const RemoveButton = props => {
 };
 
 const Persons = props => {
-  const { persons, filter, setPersons } = props;
+  const { persons, filter, setPersons, setNotificationMessage } = props;
   const filteredPersons = persons.filter(person =>
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
@@ -29,6 +33,7 @@ const Persons = props => {
           person={person}
           persons={persons}
           setPersons={setPersons}
+          setNotificationMessage={setNotificationMessage}
         />
       ))}
     </div>
@@ -36,11 +41,16 @@ const Persons = props => {
 };
 
 const Person = props => {
-  const { person, persons, setPersons } = props;
+  const { person, persons, setPersons, setNotificationMessage } = props;
   return (
     <p>
       {person.name} {person.number}
-      <RemoveButton person={person} persons={persons} setPersons={setPersons} />
+      <RemoveButton
+        person={person}
+        persons={persons}
+        setPersons={setPersons}
+        setNotificationMessage={setNotificationMessage}
+      />
     </p>
   );
 };
@@ -73,11 +83,34 @@ const PersonForm = props => {
   );
 };
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+
+  const notificationStyle = {
+    color: "green",
+    background: "lightgrey",
+    fontSize: 20,
+    borderStyle: "solid",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  };
+
+  return (
+    <div style={notificationStyle} className="error">
+      {message}
+    </div>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then(initialPersons => {
@@ -108,6 +141,10 @@ const App = () => {
       const person = persons.find(p => p.name === nameObject.name);
       personService.update(person.id, nameObject).then(returnedPerson => {
         setPersons(persons.map(p => (p.id !== person.id ? p : returnedPerson)));
+        setNotificationMessage(`Henkilön ${nameObject.name} numero päivitetty`);
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
       });
     }
   };
@@ -126,6 +163,10 @@ const App = () => {
     } else {
       personService.create(nameObject).then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
+        setNotificationMessage(`${newName} lisätty`);
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
       });
     }
 
@@ -136,6 +177,7 @@ const App = () => {
   return (
     <div>
       <h1>Puhelinluettelo</h1>
+      <Notification message={notificationMessage} />
       <Filter filter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h2>lisää uusi</h2>
@@ -148,7 +190,12 @@ const App = () => {
       />
 
       <h2>Numerot</h2>
-      <Persons persons={persons} filter={newFilter} setPersons={setPersons} />
+      <Persons
+        persons={persons}
+        filter={newFilter}
+        setPersons={setPersons}
+        setNotificationMessage={setNotificationMessage}
+      />
     </div>
   );
 };
