@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type:  application/json
+
+{
+  "title": "TestiBlogi",
+  "author": "Teuvo Testaaja",
+  "url": "t-testaaja.blogsnort.orc",
+  "likes": 0
+}
