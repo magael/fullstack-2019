@@ -19,13 +19,13 @@ const favoriteBlogs = blogs => {
     likes: 0
   }
 
-  const makeFav = blog => {
-    favBlog.title = blog.title
-    favBlog.author = blog.author
-    favBlog.likes = blog.likes
-  }
-
   if (blogs.length > 0) {
+    const makeFav = blog => {
+      favBlog.title = blog.title
+      favBlog.author = blog.author
+      favBlog.likes = blog.likes
+    }
+
     let mostLikes = 0
 
     blogs.forEach(blog => {
