@@ -26,11 +26,10 @@ const favoriteBlogs = blogs => {
   }
 
   if (blogs.length > 0) {
-    makeFav(blogs[0])
     let mostLikes = 0
 
     blogs.forEach(blog => {
-      if (blog.likes > mostLikes) {
+      if (blog.likes >= mostLikes) {
         mostLikes = blog.likes
         makeFav(blog)
       }
