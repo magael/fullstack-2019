@@ -85,7 +85,7 @@ describe('adding new blogs', () => {
 
   test('blog without url is not added', async () => {
     const newBlog = {
-      author: 'GameDev.com',
+      author: 'Multiple',
       title: 'Game Dev blogs',
       likes: 2
     }
