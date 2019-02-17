@@ -14,70 +14,112 @@ beforeEach(async () => {
   }
 })
 
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+describe('retrieving blogs', () => {
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('all blogs are returned', async () => {
+    const response = await api.get('/api/blogs')
+
+    expect(response.body.length).toBe(helper.initialBlogs.length)
+  })
+
+  test('a specific blog is within the returned blogs', async () => {
+    const response = await api.get('/api/blogs')
+
+    const titles = response.body.map(r => r.title)
+    expect(titles).toContain('First class tests')
+  })
+
+  test('returned blogs have field id', async () => {
+    const response = await api.get('/api/blogs')
+
+    const ids = response.body.map(r => r.id)
+    expect(ids).toBeDefined()
+  })
 })
 
-test('all blogs are returned', async () => {
-  const response = await api.get('/api/blogs')
+describe('adding new blogs', () => {
+  test('a valid blog can be added ', async () => {
+    const newBlog = {
+      title: 'Sane Usage of Components and Entity Systems',
+      author: 'Randy Gaul',
+      url:
+        'https://www.randygaul.net/2014/06/10/sane-usage-of-components-and-entity-systems/',
+      likes: 3
+    }
 
-  expect(response.body.length).toBe(helper.initialBlogs.length)
-})
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
-test('a specific blog is within the returned blogs', async () => {
-  const response = await api.get('/api/blogs')
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
 
-  const contents = response.body.map(r => r.title)
-  expect(contents).toContain('First class tests')
-})
+    const authors = blogsAtEnd.map(b => b.author)
+    expect(authors).toContain('Michael Chan')
+  })
 
-test('returned blogs have field id', async () => {
-  const response = await api.get('/api/blogs')
+  test('blog without title is not added', async () => {
+    const newBlog = {
+      author: 'Unity',
+      url: 'https://blogs.unity3d.com/',
+      likes: 10
+    }
 
-  const contents = response.body.map(r => r.id)
-  expect(contents).toBeDefined()
-})
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
 
-test('a valid blog can be added ', async () => {
-  const newBlog = {
-    title: 'Sane Usage of Components and Entity Systems',
-    author: 'Randy Gaul',
-    url:
-      'https://www.randygaul.net/2014/06/10/sane-usage-of-components-and-entity-systems/',
-    likes: 3
-  }
+    const blogsAtEnd = await helper.blogsInDb()
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
+  })
 
-  const blogsAtEnd = await helper.blogsInDb()
-  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+  test('blog without url is not added', async () => {
+    const newBlog = {
+      author: 'GameDev.com',
+      title: 'Game Dev blogs',
+      likes: 2
+    }
 
-  const contents = blogsAtEnd.map(n => n.author)
-  expect(contents).toContain('Michael Chan')
-})
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
 
-test('blog without content is not added', async () => {
-  const newBlog = {
-    likes: 1
-  }
+    const blogsAtEnd = await helper.blogsInDb()
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
+  })
 
-  const blogsAtEnd = await helper.blogsInDb()
+  afterAll(() => {
+    mongoose.connection.close()
+  })
 
-  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
-})
+  test('blog with undefined likes has likes set to zero', async () => {
+    const newBlog = {
+      title: 'Gamasutra blogs',
+      author: 'Multiple',
+      url: 'http://www.gamasutra.com/blogs/'
+    }
 
-afterAll(() => {
-  mongoose.connection.close()
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const newLikes = blogsAtEnd.find(b => b.title === newBlog.title).likes
+
+    expect(newLikes).toBe(0)
+  })
 })
