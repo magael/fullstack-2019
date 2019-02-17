@@ -1,7 +1,14 @@
 const Blog = require('../models/blog')
 
 const nonExistingId = async () => {
-  const blog = new Blog({ content: 'willremovethissoon' })
+  const blog = new Blog({
+    id: '5a422a851b54a676234d17a1', //modified to nonexisting
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 7,
+    __v: 0
+  })
   await blog.save()
   await blog.remove()
 
