@@ -34,6 +34,13 @@ test('a specific blog is within the returned blogs', async () => {
   expect(contents).toContain('First class tests')
 })
 
+test('returned blogs have field id', async () => {
+  const response = await api.get('/api/blogs')
+
+  const contents = response.body.map(r => r.id)
+  expect(contents).toBeDefined()
+})
+
 test('a valid blog can be added ', async () => {
   const newBlog = {
     title: 'Sane Usage of Components and Entity Systems',
@@ -57,9 +64,6 @@ test('a valid blog can be added ', async () => {
 })
 
 test('blog without content is not added', async () => {
-  const blogsAtStart = await helper.blogsInDb()
-  console.log(blogsAtStart)
-
   const newBlog = {
     likes: 1
   }
