@@ -89,6 +89,23 @@ describe('when database contains initial blogs', async () => {
     })
   })
 
+  // describe('editing a blog', () => {
+  //   test('the amount of likes of a blog can be updated', async () => {
+  //     const blogsAtStart = await helper.blogsInDb()
+
+  //     const blogToView = blogsAtStart[0]
+  //     blogToView.likes = 666
+
+  //     const resultBlog = await api
+  //       .put(`/api/blogs/${blogToView.id}`)
+  //       .send(blogToView)
+  //       .expect(200)
+  //       .expect('Content-Type', /application\/json/)
+
+  //     expect(resultBlog.likes.toBe(blogToView.likes))
+  //   })
+  // })
+
   describe('adding new blogs', () => {
     test('a valid blog can be added ', async () => {
       const newBlog = {
@@ -146,10 +163,6 @@ describe('when database contains initial blogs', async () => {
       expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
     })
 
-    afterAll(() => {
-      mongoose.connection.close()
-    })
-
     test('blog with undefined likes has likes set to zero', async () => {
       const newBlog = {
         title: 'Gamasutra blogs',
@@ -168,5 +181,9 @@ describe('when database contains initial blogs', async () => {
 
       expect(newLikes).toBe(0)
     })
+  })
+
+  afterAll(() => {
+    mongoose.connection.close()
   })
 })
