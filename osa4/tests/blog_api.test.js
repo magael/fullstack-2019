@@ -118,15 +118,11 @@ describe('when database contains initial blogs', async () => {
         url:
           'https://www.randygaul.net/2014/06/10/sane-usage-of-components-and-entity-systems/',
         likes: 3
-        // user: new User({
-        //   username: 'mammamia',
-        //   name: 'Mario',
-        //   passwordHash: 'hashtagKryptografia'
-        // })
       }
 
       await api
         .post('/api/blogs')
+        // .auth('mammamia2', 'itsmemario')
         .send(newBlog)
         .expect(200)
         .expect('Content-Type', /application\/json/)
