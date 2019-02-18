@@ -10,6 +10,10 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response, next) => {
   try {
     const body = request.body
+    if (body.password === undefined)
+      return response.status(400).json({
+        error: '`password` is required'
+      })
 
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
