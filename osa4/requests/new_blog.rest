@@ -1,14 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type:  application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hbW1hbWlhMiIsImlkIjoiNWM2YjI1NWU4MjkxNTYwMmM4YjY3ZTZhIiwiaWF0IjoxNTUwNTI2MzU2fQ.Xpu5ofxYrNrznHo_-I8chsy-GpaJCTIQptcoubtUhEQ
 
 {
   "title": "TestiBlogi3",
   "author": "Teuvo Testaaja",
   "url": "t-testaaja.blogsnort.orc",
-  "likes": 0,
-  "user": {
-    "username": "mammamia",
-    "name": "mario",
-    "id": "5c6b128ddd094f2a4c433db9"
-  }
+  "likes": 0
 }
