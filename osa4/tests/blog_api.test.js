@@ -4,10 +4,14 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 describe('when database contains initial blogs', async () => {
   beforeEach(async () => {
     await Blog.remove({})
+    await User.deleteMany({})
+    const user = new User({ username: 'root', password: 'sekret' })
+    await user.save()
 
     for (let blog of helper.initialBlogs) {
       let blogObject = new Blog(blog)
@@ -114,6 +118,11 @@ describe('when database contains initial blogs', async () => {
         url:
           'https://www.randygaul.net/2014/06/10/sane-usage-of-components-and-entity-systems/',
         likes: 3
+        // user: new User({
+        //   username: 'mammamia',
+        //   name: 'Mario',
+        //   passwordHash: 'hashtagKryptografia'
+        // })
       }
 
       await api

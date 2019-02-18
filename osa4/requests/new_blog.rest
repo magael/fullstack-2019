@@ -2,8 +2,13 @@ POST http://localhost:3001/api/blogs
 Content-Type:  application/json
 
 {
-  "title": "TestiBlogi",
+  "title": "TestiBlogi3",
   "author": "Teuvo Testaaja",
   "url": "t-testaaja.blogsnort.orc",
-  "likes": 0
+  "likes": 0,
+  "user": {
+    "username": "mammamia",
+    "name": "mario",
+    "id": "5c6b128ddd094f2a4c433db9"
+  }
 }
