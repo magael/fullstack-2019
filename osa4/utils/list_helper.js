@@ -1,46 +1,89 @@
 const dummy = blogs => {
-  if (blogs) return 1
+  if (blogs) {
+    return 1
+  }
   return 1
 }
 
-const totalLikes = blogs => {
-  const likes = blogs.map(blog => blog.likes)
-  if (likes < 1) return 0
-  const reducer = (sum, item) => {
-    return sum + item
-  }
-  return likes.reduce(reducer, 0)
+const byLikes = (a, b) => b.likes - a.likes
+const byValue = (a, b) => b.value - a.value
+
+const authorWithGreatest = counts => {
+  const authorValues = Object.keys(counts).map(author => ({
+    author,
+    value: counts[author]
+  }))
+
+  return authorValues.sort(byValue)[0]
 }
 
-const favoriteBlogs = blogs => {
-  const favBlog = {
-    title: '',
-    author: '',
-    likes: 0
+const totalLikes = blogs => {
+  if (blogs.length === 0) {
+    return 0
   }
 
-  if (blogs.length > 0) {
-    const makeFav = blog => {
-      favBlog.title = blog.title
-      favBlog.author = blog.author
-      favBlog.likes = blog.likes
+  return blogs.reduce((s, b) => s + b.likes, 0)
+}
+
+const favoriteBlog = blogs => {
+  if (blogs.length === 0) {
+    return null
+  }
+
+  const { title, author, likes } = blogs.sort(byLikes)[0]
+
+  return { title, author, likes }
+}
+
+const mostBlogs = blogs => {
+  if (blogs.length === 0) {
+    return null
+  }
+
+  const blogCount = blogs.reduce((obj, blog) => {
+    if (obj[blog.author] === undefined) {
+      obj[blog.author] = 0
     }
 
-    let mostLikes = 0
+    obj[blog.author] += 1
 
-    blogs.forEach(blog => {
-      if (blog.likes >= mostLikes) {
-        mostLikes = blog.likes
-        makeFav(blog)
-      }
-    })
+    return obj
+  }, {})
+
+  const { author, value } = authorWithGreatest(blogCount)
+
+  return {
+    author,
+    blogs: value
+  }
+}
+
+const mostLikes = blogs => {
+  if (blogs.length === 0) {
+    return null
   }
 
-  return favBlog
+  const likeCount = blogs.reduce((obj, blog) => {
+    if (obj[blog.author] === undefined) {
+      obj[blog.author] = 0
+    }
+    obj[blog.author] += blog.likes
+
+    return obj
+  }, {})
+
+  const { author, value } = authorWithGreatest(likeCount)
+
+  return {
+    author,
+    likes: value
+  }
 }
 
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlogs
+  favoriteBlog,
+  mostBlogs,
+  mostLikes
 }
