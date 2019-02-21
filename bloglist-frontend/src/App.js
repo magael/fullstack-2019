@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
+import Toggleable from "./components/Toggleable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -60,7 +61,7 @@ const BlogForm = props => (
 const LoginForm = props => (
   <form onSubmit={props.handleLogin}>
     <div>
-      käyttäjätunnus
+      username
       <input
         type="text"
         value={props.username}
@@ -69,7 +70,7 @@ const LoginForm = props => (
       />
     </div>
     <div>
-      salasana
+      password
       <input
         type="password"
         value={props.password}
@@ -152,15 +153,17 @@ const App = () => {
         setPassword={setPassword}
       />
       <h2>create new</h2>
-      <BlogForm
-        newBlogTitle={newBlogTitle}
-        setNewBlogTitle={setNewBlogTitle}
-        newBlogAuthor={newBlogAuthor}
-        setNewBlogAuthor={setNewBlogAuthor}
-        newBlogUrl={newBlogUrl}
-        setNewBlogUrl={setNewBlogUrl}
-        addBlog={addBlog}
-      />
+      <Toggleable buttonLabel="new blog">
+        <BlogForm
+          newBlogTitle={newBlogTitle}
+          setNewBlogTitle={setNewBlogTitle}
+          newBlogAuthor={newBlogAuthor}
+          setNewBlogAuthor={setNewBlogAuthor}
+          newBlogUrl={newBlogUrl}
+          setNewBlogUrl={setNewBlogUrl}
+          addBlog={addBlog}
+        />
+      </Toggleable>
       <h2>blogs</h2>
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
