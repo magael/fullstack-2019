@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import Toggleable from "./components/Toggleable";
@@ -58,29 +59,43 @@ const BlogForm = props => (
   </form>
 );
 
-const LoginForm = props => (
-  <form onSubmit={props.handleLogin}>
+const LoginForm = ({
+  handleSubmit,
+  handleUsernameChange,
+  handlePasswordChange,
+  username,
+  password
+}) => (
+  <form onSubmit={handleSubmit}>
     <div>
       username
       <input
         type="text"
-        value={props.username}
+        value={username}
         name="Username"
-        onChange={({ target }) => props.setUsername(target.value)}
+        onChange={({ target }) => handleUsernameChange(target.value)}
       />
     </div>
     <div>
       password
       <input
         type="password"
-        value={props.password}
+        value={password}
         name="Password"
-        onChange={({ target }) => props.setPassword(target.value)}
+        onChange={({ target }) => handlePasswordChange(target.value)}
       />
     </div>
     <button type="submit">log in</button>
   </form>
 );
+
+LoginForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  handleUsernameChange: PropTypes.func.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired
+};
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -175,11 +190,11 @@ const App = () => {
     <div>
       <h2>log in to application</h2>
       <LoginForm
-        handleLogin={handleLogin}
+        handleSubmit={handleLogin}
         username={username}
-        setUsername={setUsername}
+        handleUsernameChange={setUsername}
         password={password}
-        setPassword={setPassword}
+        handlePasswordChange={setPassword}
       />
     </div>
   );
