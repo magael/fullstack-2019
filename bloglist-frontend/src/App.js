@@ -4,6 +4,26 @@ import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
+const LogoutButton = props => {
+  const logout = () => {
+    blogService.setToken(null);
+    handleLogout();
+    loginService.logout();
+  };
+
+  const handleLogout = () => {
+    props.setUser(null);
+    props.setUsername("");
+    props.setPassword("");
+  };
+
+  return (
+    <button type="button" onClick={logout}>
+      log out
+    </button>
+  );
+};
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -15,6 +35,15 @@ const App = () => {
     blogService.getAll().then(blogs => setBlogs(blogs));
   }, []);
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
+  }, []);
+
   const handleLogin = async event => {
     event.preventDefault();
     try {
@@ -23,6 +52,8 @@ const App = () => {
         password
       });
 
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+      blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -58,9 +89,14 @@ const App = () => {
     </form>
   );
 
-  const blogForm = () => (
+  const blogsView = () => (
     <div>
-      <Notification message={errorMessage} />
+      <p>{user.name} logged in</p>
+      <LogoutButton
+        setUser={setUser}
+        setUsername={setUsername}
+        setPassword={setPassword}
+      />
       <h2>blogs</h2>
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
@@ -70,14 +106,8 @@ const App = () => {
 
   return (
     <div>
-      {user === null ? (
-        loginForm()
-      ) : (
-        <div>
-          <p>{user.name} logged in</p>
-          {blogForm()}
-        </div>
-      )}
+      <Notification message={errorMessage} />
+      {user === null ? loginForm() : blogsView()}
     </div>
   );
 };

@@ -6,4 +6,6 @@ const login = async credentials => {
   return response.data;
 };
 
-export default { login };
+const logout = () => window.localStorage.clear();
+
+export default { login, logout };
