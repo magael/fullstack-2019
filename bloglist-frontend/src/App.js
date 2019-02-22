@@ -5,6 +5,7 @@ import Notification from "./components/Notification";
 import Toggleable from "./components/Toggleable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import { useField } from "./hooks/index";
 
 const LogoutButton = props => {
   const logout = () => {
@@ -15,8 +16,6 @@ const LogoutButton = props => {
 
   const handleLogout = () => {
     props.setUser(null);
-    props.setUsername("");
-    props.setPassword("");
   };
 
   return (
@@ -59,42 +58,27 @@ const BlogForm = props => (
   </form>
 );
 
-const LoginForm = ({
-  handleSubmit,
-  handleUsernameChange,
-  handlePasswordChange,
-  username,
-  password
-}) => (
+const LoginForm = ({ handleSubmit, username, password }) => (
   <form onSubmit={handleSubmit}>
     <div>
       username
-      <input
-        type="text"
-        value={username}
-        name="Username"
-        onChange={({ target }) => handleUsernameChange(target.value)}
-      />
+      <input {...username} />
     </div>
     <div>
       password
-      <input
-        type="password"
-        value={password}
-        name="Password"
-        onChange={({ target }) => handlePasswordChange(target.value)}
-      />
+      <input {...password} />
     </div>
     <button type="submit">log in</button>
   </form>
 );
 
 LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired
+  handleSubmit: PropTypes.func.isRequired
+  // ennen custom hookkeja:
+  // handleUsernameChange: PropTypes.func.isRequired,
+  // handlePasswordChange: PropTypes.func.isRequired,
+  // username: PropTypes.string.isRequired,
+  // password: PropTypes.string.isRequired
 };
 
 const App = () => {
@@ -103,8 +87,8 @@ const App = () => {
   const [newBlogAuthor, setNewBlogAuthor] = useState([]);
   const [newBlogUrl, setNewBlogUrl] = useState([]);
   const [notificationMessage, setNotificationMessage] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const username = useField("text");
+  const password = useField("password");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -140,17 +124,17 @@ const App = () => {
 
   const handleLogin = async event => {
     event.preventDefault();
+    const name = username.value;
+    const pass = password.value;
     try {
       const user = await loginService.login({
-        username,
-        password
+        username: name,
+        password: pass
       });
 
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      setUsername("");
-      setPassword("");
     } catch (exception) {
       setNotificationMessage("invalid username or password");
       setTimeout(() => {
@@ -162,11 +146,7 @@ const App = () => {
   const blogsView = () => (
     <div>
       <p>{user.name} logged in</p>
-      <LogoutButton
-        setUser={setUser}
-        setUsername={setUsername}
-        setPassword={setPassword}
-      />
+      <LogoutButton setUser={setUser} username={username} password={password} />
       <h2>create new</h2>
       <Toggleable buttonLabel="new blog">
         <BlogForm
@@ -192,9 +172,7 @@ const App = () => {
       <LoginForm
         handleSubmit={handleLogin}
         username={username}
-        handleUsernameChange={setUsername}
         password={password}
-        handlePasswordChange={setPassword}
       />
     </div>
   );
