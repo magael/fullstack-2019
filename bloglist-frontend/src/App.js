@@ -25,34 +25,19 @@ const LogoutButton = props => {
   );
 };
 
-const BlogForm = props => (
-  <form onSubmit={props.addBlog}>
+const BlogForm = ({ addBlog, title, author, url }) => (
+  <form onSubmit={addBlog}>
     <div>
       title:
-      <input
-        type="text"
-        value={props.newBlogTitle}
-        name="Title"
-        onChange={({ target }) => props.setNewBlogTitle(target.value)}
-      />
+      <input {...title} reset="" />
     </div>
     <div>
       author:
-      <input
-        type="text"
-        value={props.newBlogAuthor}
-        name="Author"
-        onChange={({ target }) => props.setNewBlogAuthor(target.value)}
-      />
+      <input {...author} reset="" />
     </div>
     <div>
       url:
-      <input
-        type="text"
-        value={props.newUrlTitle}
-        name="Url"
-        onChange={({ target }) => props.setNewBlogUrl(target.value)}
-      />
+      <input {...url} reset="" />
     </div>
     <button type="submit">create</button>
   </form>
@@ -62,11 +47,11 @@ const LoginForm = ({ handleSubmit, username, password }) => (
   <form onSubmit={handleSubmit}>
     <div>
       username
-      <input {...username} />
+      <input {...username} reset="" />
     </div>
     <div>
       password
-      <input {...password} />
+      <input {...password} reset="" />
     </div>
     <button type="submit">log in</button>
   </form>
@@ -83,9 +68,9 @@ LoginForm.propTypes = {
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlogTitle, setNewBlogTitle] = useState([]);
-  const [newBlogAuthor, setNewBlogAuthor] = useState([]);
-  const [newBlogUrl, setNewBlogUrl] = useState([]);
+  const newBlogTitle = useField("text");
+  const newBlogAuthor = useField("text");
+  const newBlogUrl = useField("text");
   const [notificationMessage, setNotificationMessage] = useState(null);
   const username = useField("text");
   const password = useField("password");
@@ -108,30 +93,37 @@ const App = () => {
     event.preventDefault();
 
     const blogObject = {
-      author: newBlogAuthor,
-      title: newBlogTitle,
-      url: newBlogUrl
+      author: newBlogAuthor.value,
+      title: newBlogTitle.value,
+      url: newBlogUrl.value
     };
 
     blogService.create(blogObject).then(returnedBlog => {
       setBlogs(blogs.concat(returnedBlog));
-      setNotificationMessage(`Added: ${newBlogTitle}`);
+      setNotificationMessage(`Added: ${newBlogTitle.value}`);
       setTimeout(() => {
         setNotificationMessage(null);
       }, 5000);
     });
+
+    newBlogTitle.reset();
+    newBlogAuthor.reset();
+    newBlogUrl.reset();
   };
 
   const handleLogin = async event => {
     event.preventDefault();
     const name = username.value;
     const pass = password.value;
+
+    username.reset();
+    password.reset();
+
     try {
       const user = await loginService.login({
         username: name,
         password: pass
       });
-
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
@@ -150,12 +142,9 @@ const App = () => {
       <h2>create new</h2>
       <Toggleable buttonLabel="new blog">
         <BlogForm
-          newBlogTitle={newBlogTitle}
-          setNewBlogTitle={setNewBlogTitle}
-          newBlogAuthor={newBlogAuthor}
-          setNewBlogAuthor={setNewBlogAuthor}
-          newBlogUrl={newBlogUrl}
-          setNewBlogUrl={setNewBlogUrl}
+          title={newBlogTitle}
+          author={newBlogAuthor}
+          url={newBlogUrl}
           addBlog={addBlog}
         />
       </Toggleable>
