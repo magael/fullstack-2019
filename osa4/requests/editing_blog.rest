@@ -1,9 +1,10 @@
-PUT http://localhost:3001/api/blogs/5c698f627f3d3f0c1c21129b
+PUT http://localhost:3003/api/blogs/5c6eec30e913081658af753f
 Content-Type: application/json
 
 {
-  "title": "TestiBlogi",
-  "author": "Teuvo Testaaja",
-  "url": "t-testaaja.blogsnort.orc",
-  "likes": 11
+    "author": "jee",
+    "title": "jee",
+    "url": "jee",
+    "likes": 3,
+    "user": "5c6df4dde913081658af753a"
 }

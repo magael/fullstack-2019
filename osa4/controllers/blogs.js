@@ -45,14 +45,17 @@ router.post('/', async (request, response) => {
 })
 
 router.put('/:id', async (request, response) => {
-  const { author, title, url, likes } = request.body
+  const { author, title, url, likes, user } = request.body
 
   const blog = {
-    author,
     title,
+    author,
     url,
-    likes
+    likes,
+    user
   }
+
+  console.log(blog)
 
   const updatedNote = await Blog.findByIdAndUpdate(request.params.id, blog, {
     new: true

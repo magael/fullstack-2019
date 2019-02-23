@@ -77,7 +77,13 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs));
+    blogService.getAll().then(blogs =>
+      setBlogs(
+        blogs.sort(function(a, b) {
+          return b.likes - a.likes;
+        })
+      )
+    );
   }, []);
 
   useEffect(() => {
@@ -134,6 +140,18 @@ const App = () => {
       }, 5000);
     }
   };
+
+  // const likeBlog = async event => {
+  //   event.preventDefault();
+
+  //   const updatedBlog = { ...blog, likes: blog.likes + 1 };
+
+  //   try {
+  //     await blogService.update(blog.id, updatedBlog);
+  //   } catch (exception) {
+  //     console.log(exception);
+  //   }
+  // };
 
   const blogsView = () => (
     <div>

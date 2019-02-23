@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import blogService from "../services/blogs";
 
 const Blog = ({ blog }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -12,6 +13,20 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   };
 
+  const likeBlog = async event => {
+    event.preventDefault();
+
+    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+
+    try {
+      console.log(blog.id);
+      console.log(updatedBlog);
+      await blogService.update(blog.id, updatedBlog);
+    } catch (exception) {
+      console.log(exception);
+    }
+  };
+
   return (
     <div style={blogStyle}>
       <div onClick={() => setShowDetails(!showDetails)}>
@@ -19,7 +34,7 @@ const Blog = ({ blog }) => {
         <div style={details}>
           {blog.url}
           <br />
-          {blog.likes} likes <button>like</button>
+          {blog.likes} likes <button onClick={likeBlog}>like</button>
           <br />
           added by {blog.user.name}
         </div>
