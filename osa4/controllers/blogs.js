@@ -55,8 +55,6 @@ router.put('/:id', async (request, response) => {
     user
   }
 
-  console.log(blog)
-
   const updatedNote = await Blog.findByIdAndUpdate(request.params.id, blog, {
     new: true
   })
