@@ -17,4 +17,23 @@ describe("<App />", () => {
       "Go To Statement Considered Harmful"
     );
   });
+
+  it("if user is logged in, notes are rendered", async () => {
+    const user = {
+      username: "tester",
+      token: "1231231214",
+      name: "Teuvo Testaaja"
+    };
+
+    localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+    const component = render(<App />);
+    component.rerender(<App />);
+
+    await waitForElement(() => component.getByText("blogs"));
+
+    expect(component.container).toHaveTextContent("React patterns");
+    expect(component.container).toHaveTextContent(
+      "Go To Statement Considered Harmful"
+    );
+  });
 });
