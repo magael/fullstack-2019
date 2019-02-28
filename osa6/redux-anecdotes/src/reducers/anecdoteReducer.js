@@ -25,14 +25,21 @@ const reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case "VOTE":
-      const id = action.id;
+      const id = action.data.id;
       const anecdoteToChange = state.find(a => a.id === id);
       const newVotes = anecdoteToChange.votes + 1;
       const changedAnecdote = {
         ...anecdoteToChange,
         votes: newVotes
       };
-      return state.map(a => (a.id !== id ? a : changedAnecdote));
+      return state
+        .map(a => (a.id !== id ? a : changedAnecdote))
+        .sort(function(a, b) {
+          return b.votes - a.votes;
+        });
+    case "NEW_ANECDOTE":
+      const newAnecdote = asObject(action.data.content);
+      return state.concat(newAnecdote);
     default:
       return state;
   }
