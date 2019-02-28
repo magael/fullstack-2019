@@ -18,7 +18,7 @@ const App = () => {
     });
   };
 
-  const neutral = () => {
+  const ok = () => {
     store.dispatch({
       type: "OK"
     });
@@ -33,7 +33,7 @@ const App = () => {
   return (
     <div>
       <button onClick={good}>hyvä</button>
-      <button onClick={neutral}>neutraali</button>
+      <button onClick={ok}>neutraali</button>
       <button onClick={bad}>huono</button>
       <button onClick={zero}>nollaa tilastot</button>
       <div>hyvä {store.getState().good}</div>
