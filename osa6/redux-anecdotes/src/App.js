@@ -1,35 +1,28 @@
 import React from "react";
+import { vote, createAnecdote } from "./reducers/anecdoteReducer";
 
 const App = props => {
-  const anecdotes = props.store.getState();
+  const store = props.store;
 
-  const vote = id => {
-    console.log("vote", id);
-    props.store.dispatch({
-      type: "VOTE",
-      data: { id }
-    });
+  const upvote = id => {
+    store.dispatch(vote(id));
   };
 
   const addAnecdote = event => {
     event.preventDefault();
-    const content = event.target.anecdote.value;
-    props.store.dispatch({
-      type: "NEW_ANECDOTE",
-      data: { content }
-    });
+    store.dispatch(createAnecdote(event.target.anecdote.value));
     event.target.anecdote.value = "";
   };
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote => (
+      {store.getState().map(anecdote => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => upvote(anecdote.id)}>vote</button>
           </div>
         </div>
       ))}
