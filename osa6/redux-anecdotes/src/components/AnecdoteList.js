@@ -10,7 +10,7 @@ const AnecdoteList = props => {
 
   return (
     <div>
-      {store.getState().map(anecdote => (
+      {store.getState().anecdotes.map(anecdote => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
