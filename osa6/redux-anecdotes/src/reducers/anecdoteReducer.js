@@ -45,10 +45,13 @@ const anecdoteReducer = (state = initialState, action) => {
   }
 };
 
-export const vote = id => {
+export const vote = (id, content) => {
   return {
     type: "VOTE",
-    data: { id }
+    data: {
+      id,
+      content
+    }
   };
 };
 
