@@ -10,10 +10,16 @@ const Notification = props => {
   };
 
   const message = props.notification;
+  console.log(message ,"adsads")
 
   if (message === "") return <div />;
 
   return <div style={style}>{message}</div>;
 };
 
-export default connect()(Notification);
+export default Notification
+
+// export default connect(
+//   null,
+//   null
+// )(Notification);

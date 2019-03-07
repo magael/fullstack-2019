@@ -4,18 +4,18 @@ import { vote } from "../reducers/anecdoteReducer";
 import { clearMessage } from "../reducers/notificationReducer";
 
 const AnecdoteList = props => {
-  const { anecdotes, notification, filter } = props;
-
   // Tän vois tietty eriyttää omaksi komponentiksi
   const upvote = (id, content) => {
     // Viestin ajastusta voisi säätää enemmänkin,
     // jotta joka viesti olisi aina sen 5 sekuntia,
     // mutta seuraavassa ainakin pieni ehto estämään päällekkäisiä ajastuksia
-    if (notification === "") {
+    if (props.notification === "") {
       setTimeout(() => {
+        console.log("CLEARED MSG")
         props.clearMessage();
       }, 5000);
     }
+    console.log("about to vote")
     props.vote(id, content);
   };
 

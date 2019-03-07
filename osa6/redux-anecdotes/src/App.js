@@ -6,12 +6,12 @@ import Filter from "./components/Filter";
 
 const App = props => (
   <div>
-    <h2>Anecdotes</h2>
-    <Notification store={props.store} />
-    <Filter store={props.store} />
-    <AnecdoteForm store={props.store} />
+    <h1>Programming Anecdotes</h1>
+    <Notification />
+    <Filter />
+    <AnecdoteForm />
     <br></br>
-    <AnecdoteList store={props.store} />
+    <AnecdoteList />
   </div>
 );
 
