@@ -1,18 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
 import { vote } from "../reducers/anecdoteReducer";
 import { clearMessage } from "../reducers/notificationReducer";
 
-const AnecdoteList = ({ store }) => {
-  const { anecdotes, notification, filter } = store.getState();
-
-  const anecdotesToShow = () => {
-    if (filter === "ALL") {
-      return anecdotes;
-    }
-    return anecdotes.filter(a =>
-      a.content.toLowerCase().includes(filter.toLowerCase())
-    );
-  };
+const AnecdoteList = props => {
+  const { anecdotes, notification, filter } = props;
 
   // Tän vois tietty eriyttää omaksi komponentiksi
   const upvote = (id, content) => {
@@ -21,19 +13,19 @@ const AnecdoteList = ({ store }) => {
     // mutta seuraavassa ainakin pieni ehto estämään päällekkäisiä ajastuksia
     if (notification === "") {
       setTimeout(() => {
-        store.dispatch(clearMessage());
+        props.clearMessage();
       }, 5000);
     }
-    store.dispatch(vote(id, content));
+    props.vote(id, content);
   };
 
   return (
     <div>
-      {anecdotesToShow().map(anecdote => (
+      {props.visibleAnedotes.map(anecdote => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
-            has {anecdote.votes}
+            has {anecdote.votes}{" "}
             <button onClick={() => upvote(anecdote.id, anecdote.content)}>
               vote
             </button>
@@ -44,4 +36,27 @@ const AnecdoteList = ({ store }) => {
   );
 };
 
-export default AnecdoteList;
+const anecdotesToShow = ({ anecdotes, filter }) => {
+  if (filter === "ALL") {
+    return anecdotes;
+  }
+  return anecdotes.filter(a =>
+    a.content.toLowerCase().includes(filter.toLowerCase())
+  );
+};
+
+const mapStateToProps = state => {
+  return {
+    visibleAnedotes: anecdotesToShow(state)
+  };
+};
+
+const mapDispatchToProps = {
+  clearMessage,
+  vote
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnecdoteList);
