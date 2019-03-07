@@ -9,7 +9,7 @@ const AnecdoteList = props => {
 
   return (
     <div>
-      {props.map(anecdote => (
+      {props.anecdotes.map(anecdote => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
