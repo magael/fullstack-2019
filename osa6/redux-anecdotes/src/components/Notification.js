@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 
 const Notification = props => {
   const style = {
@@ -9,17 +9,25 @@ const Notification = props => {
     marginBottom: 10
   };
 
-  const message = props.notification;
-  console.log(message ,"adsads")
+  const message = props.visibleNotification;
+  console.log(message, "adsads");
 
   if (message === "") return <div />;
 
   return <div style={style}>{message}</div>;
 };
 
-export default Notification
+const currentNotification = ({ notification }) =>  {
+  return notification
+}
 
-// export default connect(
-//   null,
-//   null
-// )(Notification);
+const mapStateToProps = state => {
+  return {
+    visibleNotification: currentNotification(state)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Notification);
