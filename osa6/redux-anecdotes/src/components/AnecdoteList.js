@@ -9,14 +9,14 @@ const AnecdoteList = props => {
     // Viestin ajastusta voisi säätää enemmänkin,
     // jotta joka viesti olisi aina sen 5 sekuntia,
     // mutta seuraavassa ainakin pieni ehto estämään päällekkäisiä ajastuksia
-    console.log("props.notification: ", props.visibleNotification)
+    console.log("props.notification: ", props.visibleNotification);
     if (props.visibleNotification === "") {
       setTimeout(() => {
-        console.log("CLEARED MSG")
+        console.log("CLEARED MSG");
         props.clearMessage();
       }, 5000);
     }
-    console.log("about to vote")
+    console.log("about to vote");
     props.vote(id, content);
   };
 
@@ -46,9 +46,9 @@ const anecdotesToShow = ({ anecdotes, filter }) => {
   );
 };
 
-const currentNotification = ({ notification }) =>  {
-  return notification
-}
+const currentNotification = ({ notification }) => {
+  return notification;
+};
 
 const mapStateToProps = state => {
   return {
