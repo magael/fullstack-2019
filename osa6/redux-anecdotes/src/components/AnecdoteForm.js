@@ -6,10 +6,11 @@ import anecdoteService from "../services/anecdoteService";
 const AnecdoteForm = props => {
   const addAnecdote = async (event) => {
     event.preventDefault();
-    const content = event.target.anecdote.value
-    const newAnecdote = await anecdoteService.createNew(content)
-    props.createAnecdote(newAnecdote.content);
+    const content = event.target.anecdote.value;
+    // const newAnecdote = await anecdoteService.createNew(content);
+    // props.createAnecdote(newAnecdote.content);
     event.target.anecdote.value = "";
+    props.createAnecdote(content)
   };
 
   return (
