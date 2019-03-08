@@ -9,7 +9,6 @@ const getAll = async () => {
 
 const createNew = async content => {
   const object = { content, votes: 0 };
-  // const object = { content };
 
   const response = await axios.post(url, object);
   return response.data;
