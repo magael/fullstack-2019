@@ -1,19 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { vote } from "../reducers/anecdoteReducer";
-import { clearMessage } from "../reducers/notificationReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
 const AnecdoteList = props => {
-  // Tän vois tietty eriyttää omaksi komponentiksi
   const upvote = anecdote => {
-    // Viestin ajastusta voisi säätää enemmänkin,
-    // jotta joka viesti olisi aina sen 5 sekuntia,
-    // mutta seuraavassa ainakin pieni ehto estämään päällekkäisiä ajastuksia
-    if (props.visibleNotification === "") {
-      setTimeout(() => {
-        props.clearMessage();
-      }, 5000);
-    }
+    props.setNotification(`you voted '${anecdote.content}'`, 10);
     props.vote(anecdote);
   };
 
@@ -53,7 +45,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  clearMessage,
+  setNotification,
   vote
 };
 
