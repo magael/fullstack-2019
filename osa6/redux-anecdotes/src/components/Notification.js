@@ -10,16 +10,15 @@ const Notification = props => {
   };
 
   const message = props.visibleNotification;
-  console.log(message, "adsads");
 
   if (message === "") return <div />;
 
   return <div style={style}>{message}</div>;
 };
 
-const currentNotification = ({ notification }) =>  {
-  return notification
-}
+const currentNotification = ({ notification }) => {
+  return notification;
+};
 
 const mapStateToProps = state => {
   return {
