@@ -31,6 +31,13 @@ const Menu = props => {
             path="/"
             render={() => <AnecdoteList anecdotes={props.anecdotes} />}
           />
+          <Route
+            exact
+            path="/anecdotes/:id"
+            render={({ match }) => (
+              <Anecdote anecdote={props.anecdoteById(match.params.id)} />
+            )}
+          />
           <Route path="/create" render={() => <CreateNew />} />
           <Route path="/about" render={() => <About addNew={props.addNew} />} />
         </div>
@@ -47,6 +54,18 @@ const AnecdoteList = ({ anecdotes }) => (
         <li key={anecdote.id}>{anecdote.content}</li>
       ))}
     </ul>
+  </div>
+);
+
+const Anecdote = ({ anecdote }) => (
+  <div>
+    <h2>
+      {anecdote.content} by {anecdote.author}
+    </h2>
+    <p>has {anecdote.votes} votes</p>
+    <p>
+      for more info see <a href={anecdote.info}>{anecdote.info}</a>
+    </p>
   </div>
 );
 
@@ -176,7 +195,7 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes} addNew={addNew} />
+      <Menu anecdotes={anecdotes} addNew={addNew} anecdoteById={anecdoteById} />
       <Footer />
     </div>
   );
