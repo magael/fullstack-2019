@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { Container, Table, Form, Button } from 'semantic-ui-react';
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import Toggleable from "./components/Toggleable";
@@ -19,42 +20,42 @@ const LogoutButton = props => {
   };
 
   return (
-    <button type="button" onClick={logout}>
+    <Button onClick={logout}>
       log out
-    </button>
+    </Button>
   );
 };
 
 const BlogForm = ({ addBlog, title, author, url }) => (
-  <form onSubmit={addBlog}>
-    <div>
-      title:
+  <Form onSubmit={addBlog}>
+    <Form.Field>
+      <label>title:</label>
       <input {...title} reset="" />
-    </div>
-    <div>
-      author:
+    </Form.Field>
+    <Form.Field>
+      <label>author:</label>
       <input {...author} reset="" />
-    </div>
-    <div>
-      url:
+    </Form.Field>
+    <Form>
+      <label>url:</label>
       <input {...url} reset="" />
-    </div>
-    <button type="submit">create</button>
-  </form>
+    </Form>
+    <Button positive type="submit">create</Button>
+  </Form>
 );
 
 const LoginForm = ({ handleSubmit, username, password }) => (
-  <form onSubmit={handleSubmit}>
-    <div>
-      username
+  <Form onSubmit={handleSubmit}>
+    <Form.Field>
+      <label>username</label>
       <input {...username} reset="" />
-    </div>
-    <div>
-      password
+    </Form.Field>
+    <Form.Field>
+      <label>password</label>
       <input {...password} reset="" />
-    </div>
-    <button type="submit">log in</button>
-  </form>
+    </Form.Field>
+    <Button type="submit">log in</Button>
+  </Form>
 );
 
 LoginForm.propTypes = {
@@ -79,7 +80,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(
-        blogs.sort(function(a, b) {
+        blogs.sort(function (a, b) {
           return b.likes - a.likes;
         })
       )
@@ -166,10 +167,18 @@ const App = () => {
           addBlog={addBlog}
         />
       </Toggleable>
-      <h2>blogs</h2>
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      <h2>Blogs</h2>
+      <Table celled>
+        <Table.Body>
+          {blogs.map(blog => (
+            <Table.Row key={blog.id}>
+              <Table.Cell>
+                <Blog blog={blog} />
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
     </div>
   );
 
@@ -185,10 +194,12 @@ const App = () => {
   );
 
   return (
-    <div>
-      <Notification message={notificationMessage} />
-      {user === null ? loginView() : blogsView()}
-    </div>
+    <Container>
+      <div>
+        <Notification message={notificationMessage} />
+        {user === null ? loginView() : blogsView()}
+      </div>
+    </Container>
   );
 };
 
