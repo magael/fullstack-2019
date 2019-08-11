@@ -1,16 +1,32 @@
-import React from 'react';
+import React from "react";
+import { connect } from "react-redux";
 
-const Notification = () => {
+const Notification = props => {
   const style = {
-    border: 'solid',
+    border: "solid",
     padding: 10,
-    borderWidth: 1
-  }
-  return (
-    <div style={style}>
-      render here notification...
-    </div>
-  )
-}
+    borderWidth: 1,
+    marginBottom: 10
+  };
 
-export default Notification
+  const message = props.visibleNotification;
+
+  if (message === "") return <div />;
+
+  return <div style={style}>{message}</div>;
+};
+
+const currentNotification = ({ notification }) => {
+  return notification;
+};
+
+const mapStateToProps = state => {
+  return {
+    visibleNotification: currentNotification(state)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Notification);
