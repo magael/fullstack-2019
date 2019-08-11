@@ -1,3 +1,4 @@
+import { Container, Table, Form, Button } from 'semantic-ui-react';
 import React, { useState } from "react";
 import {
   BrowserRouter as Router,
@@ -50,11 +51,17 @@ const Menu = props => {
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => (
-        <li key={anecdote.id}>{anecdote.content}</li>
-      ))}
-    </ul>
+    <Table>
+      <Table.Body>
+        {anecdotes.map(anecdote => (
+          <Table.Row key={anecdote.id}>
+            <Table.Cell>
+              {anecdote.content}
+            </Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
   </div>
 );
 
@@ -134,33 +141,33 @@ const CreateNew = props => {
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
+      <Form onSubmit={handleSubmit}>
+        <Form.Field>
+          <label>content</label>
           <input
             name="content"
             value={content}
             onChange={e => setContent(e.target.value)}
           />
-        </div>
-        <div>
-          author
+        </Form.Field>
+        <Form.Field>
+          <label>author</label>
           <input
             name="author"
             value={author}
             onChange={e => setAuthor(e.target.value)}
           />
-        </div>
-        <div>
-          url for more info
+        </Form.Field>
+        <Form.Field>
+          <label>url for more info</label>
           <input
             name="info"
             value={info}
             onChange={e => setInfo(e.target.value)}
           />
-        </div>
-        <button>create</button>
-      </form>
+        </Form.Field>
+        <Button type="submit">create</Button>
+      </Form>
     </div>
   );
 };
@@ -210,11 +217,13 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes} addNew={addNew} anecdoteById={anecdoteById} notification={notification} />
-      <Footer />
-    </div>
+    <Container>
+      <div>
+        <h1>Software anecdotes</h1>
+        <Menu anecdotes={anecdotes} addNew={addNew} anecdoteById={anecdoteById} notification={notification} />
+        <Footer />
+      </div>
+    </Container>
   );
 };
 
